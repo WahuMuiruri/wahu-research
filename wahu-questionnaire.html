@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Research Questionnaire &ndash; KCA University</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f1f5f9; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+const NAVY = "#1F3864";
+const BLUE = "#2E74B5";
+const WHITE = "#FFFFFF";
+
+const SHEETS_URL = "https://script.google.com/macros/s/AKfycbxHxkCu3zP0OUu4C0lDE7fpor5DMzmRMW5wlm7CY5ZfAaU1AIrhu_XqeUvPCfMZAKY8/exec";
+
+const SECTIONS = [
+  {
+    id: "A", title: "General Information", subtitle: "Respondent & Firm Profile",
+    instruction: "Please select the most appropriate answer or fill in the blank spaces as applicable.",
+    groups: [
+      {
+        label: "A1. Respondent Information",
+        questions: [
+          { id: "A1", type: "radio", text: "What is your gender?", options: ["Male", "Female", "Prefer not to say"] },
+          { id: "A2", type: "radio", text: "What is your highest level of education?", options: ["Diploma / Certificate", "Bachelor's Degree", "Master's Degree", "Doctorate (PhD) or above"] },
+          { id: "A3", type: "radio", text: "What is your current job level?", options: ["Senior Management (CEO, MD, Director, VP)", "Middle Management (Manager, Head of Department)", "Functional / Operational Management", "Other"] },
+          { id: "A4", type: "radio", text: "How many years of experience do you have in your current role?", options: ["Less than 2 years", "2 &ndash; 5 years", "6 &ndash; 10 years", "More than 10 years"] },
+          { id: "A5", type: "radio", text: "How long have you worked in Kenya's manufacturing sector?", options: ["Less than 2 years", "2 &ndash; 5 years", "6 &ndash; 10 years", "More than 10 years"] },
+        ]
+      },
+      {
+        label: "A2. Firm Profile",
+        questions: [
+          { id: "A6", type: "radio", text: "What subsector does your firm primarily operate in?", options: ["Food and Beverages", "Pharmaceuticals and Healthcare", "Textiles and Apparel", "Chemicals and Petrochemicals", "Construction and Building Materials", "Electronics and Engineering", "Other"] },
+          { id: "A7", type: "radio", text: "How many full-time employees does your firm have?", options: ["Fewer than 50", "50 &ndash; 100", "101 &ndash; 250", "251 &ndash; 500", "More than 500"] },
+          { id: "A8", type: "radio", text: "How many years has your firm been operating in Kenya?", options: ["Less than 5 years", "5 &ndash; 10 years", "11 &ndash; 20 years", "More than 20 years"] },
+          { id: "A9", type: "radio", text: "What is the approximate annual turnover of your firm?", options: ["Less than KES 10 million", "KES 10 million &ndash; KES 50 million", "KES 51 million &ndash; KES 500 million", "More than KES 500 million", "Prefer not to disclose"] },
+          { id: "A10", type: "radio", text: "Is your firm listed on any stock exchange?", options: ["Yes — Nairobi Securities Exchange (NSE)", "Yes — Other exchange", "No"] },
+        ]
+      }
+    ]
+  },
+  {
+    id: "B", title: "Business Intelligence Capability", subtitle: "Independent Variable",
+    instruction: "Please indicate your level of agreement with each statement using the five-point scale: 1 = Strongly Disagree · 2 = Disagree · 3 = Neutral · 4 = Agree · 5 = Strongly Agree",
+    groups: [
+      {
+        label: "B1. Data Collection and Integration",
+        questions: [
+          { id: "B1", type: "likert", text: "Our firm systematically collects data from multiple internal sources (e.g., production, sales, finance, HR)." },
+          { id: "B2", type: "likert", text: "Our firm integrates data from external sources (e.g., market intelligence, supplier data, industry reports) into its business intelligence systems." },
+          { id: "B3", type: "likert", text: "Our firm has effective processes for ensuring the accuracy and completeness of the data it collects." },
+          { id: "B4", type: "likert", text: "Our firm's information technology infrastructure adequately supports the collection and storage of organizational data." },
+          { id: "B5", type: "likert", text: "Our firm maintains a centralized data repository that is accessible to decision-makers across departments." },
+        ]
+      },
+      {
+        label: "B2. Analytical Competence",
+        questions: [
+          { id: "B6", type: "likert", text: "Our firm employs staff with the analytical skills needed to interpret business intelligence outputs effectively." },
+          { id: "B7", type: "likert", text: "Our firm uses advanced analytical tools (e.g., dashboards, predictive analytics, ERP systems) to generate actionable insights." },
+          { id: "B8", type: "likert", text: "Our firm regularly conducts data analysis to identify operational efficiencies and performance improvement opportunities." },
+          { id: "B9", type: "likert", text: "Business intelligence outputs in our firm are presented in formats that are easy for managers to interpret and use." },
+          { id: "B10", type: "likert", text: "Our firm's analytical capabilities enable it to identify market trends and anticipate changes in the business environment." },
+        ]
+      },
+      {
+        label: "B3. Business Intelligence Systems and Technology",
+        questions: [
+          { id: "B11", type: "likert", text: "Our firm has invested in modern business intelligence software or platforms (e.g., ERP, CRM, BI tools)." },
+          { id: "B12", type: "likert", text: "Our firm's business intelligence systems are updated regularly to reflect current organizational data." },
+          { id: "B13", type: "likert", text: "Our firm's information systems enable real-time monitoring of key performance indicators." },
+          { id: "B14", type: "likert", text: "Our firm uses cloud-based or digital platforms to enhance its business intelligence capabilities." },
+          { id: "B15", type: "likert", text: "The business intelligence systems in our firm support cross-functional information sharing across departments." },
+        ]
+      },
+      {
+        label: "B4. Managerial Utilization of Business Intelligence",
+        questions: [
+          { id: "B16", type: "likert", text: "Managers in our firm actively use business intelligence outputs when making strategic decisions." },
+          { id: "B17", type: "likert", text: "Our firm has a culture that encourages evidence-based decision-making supported by business intelligence." },
+          { id: "B18", type: "likert", text: "Senior leaders in our firm demonstrate commitment to leveraging business intelligence for organizational improvement." },
+          { id: "B19", type: "likert", text: "Business intelligence capability in our firm is regarded as a strategic organizational asset." },
+          { id: "B20", type: "likert", text: "Our firm's investment in business intelligence has improved the overall quality of managerial decision-making." },
+        ]
+      }
+    ]
+  },
+  {
+    id: "C", title: "Strategic Decision-Making", subtitle: "Mediating Variable",
+    instruction: "Please indicate your level of agreement with each statement using the five-point scale: 1 = Strongly Disagree · 2 = Disagree · 3 = Neutral · 4 = Agree · 5 = Strongly Agree",
+    groups: [
+      {
+        label: "C1. Decision Speed and Responsiveness",
+        questions: [
+          { id: "C1", type: "likert", text: "Our firm makes strategic decisions in a timely manner in response to changes in the business environment." },
+          { id: "C2", type: "likert", text: "Business intelligence capability enables our firm to reduce the time required to reach strategic decisions." },
+          { id: "C3", type: "likert", text: "Our firm is able to rapidly adjust strategic plans when new information becomes available." },
+          { id: "C4", type: "likert", text: "Decision-making processes in our firm are not unnecessarily delayed by information gaps or data unavailability." },
+          { id: "C5", type: "likert", text: "Our firm responds faster than competitors to emerging market opportunities and threats." },
+        ]
+      },
+      {
+        label: "C2. Decision Comprehensiveness",
+        questions: [
+          { id: "C6", type: "likert", text: "Strategic decisions in our firm are based on a thorough analysis of available information and data." },
+          { id: "C7", type: "likert", text: "Our firm considers a wide range of strategic alternatives before arriving at a final decision." },
+          { id: "C8", type: "likert", text: "Our firm systematically evaluates the risks and potential consequences of strategic options before implementation." },
+          { id: "C9", type: "likert", text: "Business intelligence outputs enable our firm to make more comprehensive and well-informed strategic decisions." },
+          { id: "C10", type: "likert", text: "Managers in our firm consult relevant data and analytical reports before making major strategic commitments." },
+        ]
+      },
+      {
+        label: "C3. Decision Quality and Accuracy",
+        questions: [
+          { id: "C11", type: "likert", text: "Strategic decisions made in our firm are generally of high quality and aligned with organizational objectives." },
+          { id: "C12", type: "likert", text: "Our firm's use of business intelligence has improved the accuracy of strategic decisions." },
+          { id: "C13", type: "likert", text: "Our firm rarely reverses or significantly alters strategic decisions due to inadequate information at the time of decision." },
+          { id: "C14", type: "likert", text: "Business intelligence capability enhances the confidence of managers in the strategic decisions they make." },
+          { id: "C15", type: "likert", text: "Our firm's strategic decisions consistently produce the intended organizational outcomes." },
+        ]
+      },
+      {
+        label: "C4. Strategic Planning and Resource Allocation",
+        questions: [
+          { id: "C16", type: "likert", text: "Our firm uses business intelligence insights to guide the development of strategic plans." },
+          { id: "C17", type: "likert", text: "Resource allocation decisions in our firm are informed by data-driven business intelligence outputs." },
+          { id: "C18", type: "likert", text: "Our firm effectively aligns its strategic plans with the insights generated from its business intelligence systems." },
+          { id: "C19", type: "likert", text: "Business intelligence capability in our firm improves the quality of long-term strategic planning." },
+          { id: "C20", type: "likert", text: "Managers in our firm use business intelligence to prioritize organizational investments and strategic initiatives." },
+        ]
+      }
+    ]
+  },
+  {
+    id: "D", title: "Organizational Performance", subtitle: "Dependent Variable",
+    instruction: "Please indicate your level of agreement with each statement using the five-point scale: 1 = Strongly Disagree · 2 = Disagree · 3 = Neutral · 4 = Agree · 5 = Strongly Agree",
+    groups: [
+      {
+        label: "D1. Financial Performance",
+        questions: [
+          { id: "D1", type: "likert", text: "Our firm has achieved consistent revenue growth over the past three years." },
+          { id: "D2", type: "likert", text: "Our firm's profitability has improved over the past three financial years." },
+          { id: "D3", type: "likert", text: "Our firm's return on investment (ROI) compares favourably with industry peers." },
+          { id: "D4", type: "likert", text: "Business intelligence capability has contributed to improved financial performance in our firm." },
+          { id: "D5", type: "likert", text: "Our firm has successfully reduced operational costs through data-driven decision-making." },
+        ]
+      },
+      {
+        label: "D2. Operational Efficiency",
+        questions: [
+          { id: "D6", type: "likert", text: "Our firm consistently meets its production targets and operational goals." },
+          { id: "D7", type: "likert", text: "Our firm has improved its production efficiency and resource utilization over the past three years." },
+          { id: "D8", type: "likert", text: "Business intelligence capability has helped our firm identify and eliminate operational inefficiencies." },
+          { id: "D9", type: "likert", text: "Our firm's supply chain management has improved as a result of data-driven decision-making." },
+          { id: "D10", type: "likert", text: "Our firm's operational processes are well-coordinated and aligned with organizational strategic objectives." },
+        ]
+      },
+      {
+        label: "D3. Customer Satisfaction and Market Competitiveness",
+        questions: [
+          { id: "D11", type: "likert", text: "Our firm consistently meets or exceeds customer expectations in terms of product quality and service delivery." },
+          { id: "D12", type: "likert", text: "Customer satisfaction ratings for our firm have improved over the past three years." },
+          { id: "D13", type: "likert", text: "Our firm's business intelligence capability has strengthened its ability to understand and respond to customer needs." },
+          { id: "D14", type: "likert", text: "Our firm has maintained or increased its market share within Kenya's manufacturing sector." },
+          { id: "D15", type: "likert", text: "Our firm's competitive position in the market has improved as a result of informed strategic decision-making." },
+        ]
+      },
+      {
+        label: "D4. Innovation and Long-Term Sustainability",
+        questions: [
+          { id: "D16", type: "likert", text: "Our firm regularly introduces new products, processes, or services to improve its competitive position." },
+          { id: "D17", type: "likert", text: "Business intelligence capability has enhanced our firm's ability to identify and act on innovation opportunities." },
+          { id: "D18", type: "likert", text: "Our firm invests in research, development, and digital transformation to sustain long-term performance." },
+          { id: "D19", type: "likert", text: "Our firm's strategic use of business intelligence has improved its long-term organizational sustainability." },
+          { id: "D20", type: "likert", text: "Our firm is well-positioned to sustain its competitive advantage in the manufacturing sector over the next five years." },
+        ]
+      }
+    ]
+  },
+  {
+    id: "E", title: "Open-Ended Questions", subtitle: "Qualitative Insights",
+    instruction: "Please provide brief responses to the following questions. Your insights are highly valued and will contribute to a deeper understanding of the study's themes.",
+    groups: [
+      {
+        label: "",
+        questions: [
+          { id: "E1", type: "textarea", text: "In your view, what are the greatest challenges your firm faces in implementing and leveraging Business Intelligence Capability to support strategic decision-making?" },
+          { id: "E2", type: "textarea", text: "How has the adoption of Business Intelligence tools and systems influenced the quality and speed of strategic decisions made by management in your firm?" },
+          { id: "E3", type: "textarea", text: "What organizational factors (e.g., leadership commitment, staff competence, organizational culture) most significantly influence the effectiveness of Strategic Decision-Making in your firm?" },
+          { id: "E4", type: "textarea", text: "What additional strategies or investments do you believe would most improve your firm's Business Intelligence Capability and its contribution to Organizational Performance?" },
+          { id: "E5", type: "textarea", text: "Are there any other observations or comments regarding Business Intelligence Capability, Strategic Decision-Making, or Organizational Performance that you would like to share?" },
+        ]
+      }
+    ]
+  }
+];
+
+const LIKERT_LABELS = ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"];
+const SECTION_COLORS = { A: "#1F3864", B: "#1a5276", C: "#154360", D: "#1b4332", E: "#4a235a" };
+
+function generateSubmissionId() {
+  return "WQ-" + Date.now().toString(36).toUpperCase() + "-" + Math.random().toString(36).substring(2, 6).toUpperCase();
+}
+
+function flattenAnswers(answers) {
+  const all = SECTIONS.flatMap(s => s.groups.flatMap(g => g.questions));
+  const row = { Submission_ID: generateSubmissionId(), Timestamp: new Date().toISOString() };
+  all.forEach(q => { row[q.id] = answers[q.id] ?? ""; });
+  return row;
+}
+
+function ProgressBar({ current, total }) {
+  const pct = Math.round((current / total) * 100);
+  return (
+    <div style={{ marginBottom: 8 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "#bfdbfe", marginBottom: 4 }}>
+        <span>Section {current} of {total}</span>
+        <span>{pct}% complete</span>
+      </div>
+      <div style={{ background: "rgba(255,255,255,0.2)", borderRadius: 999, height: 6, overflow: "hidden" }}>
+        <div style={{ width: `${pct}%`, background: "rgba(255,255,255,0.9)", height: "100%", borderRadius: 999, transition: "width 0.4s ease" }} />
+      </div>
+    </div>
+  );
+}
+
+function RadioQuestion({ q, value, onChange, error }) {
+  return (
+    <div style={{ marginBottom: 24 }}>
+      <p style={{ fontWeight: 600, fontSize: 14.5, color: "#111827", marginBottom: 10, lineHeight: 1.5 }}>
+        {q.text}<span style={{ color: "#ef4444", marginLeft: 3 }}>*</span>
+      </p>
+      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        {q.options.map(opt => (
+          <label key={opt} onClick={() => onChange(q.id, opt)} style={{
+            display: "flex", alignItems: "center", gap: 10, cursor: "pointer",
+            padding: "10px 14px", borderRadius: 8,
+            border: `1.5px solid ${value === opt ? BLUE : "#e5e7eb"}`,
+            background: value === opt ? "#eff6ff" : WHITE,
+            transition: "all 0.15s"
+          }}>
+            <div style={{
+              width: 18, height: 18, borderRadius: "50%", flexShrink: 0,
+              border: `2px solid ${value === opt ? BLUE : "#d1d5db"}`,
+              background: value === opt ? BLUE : WHITE,
+              display: "flex", alignItems: "center", justifyContent: "center"
+            }}>
+              {value === opt && <div style={{ width: 7, height: 7, borderRadius: "50%", background: WHITE }} />}
+            </div>
+            <span style={{ fontSize: 14, color: "#374151" }}>{opt}</span>
+          </label>
+        ))}
+      </div>
+      {error && <p style={{ color: "#ef4444", fontSize: 12, marginTop: 6 }}>Please select an option.</p>}
+    </div>
+  );
+}
+
+function LikertQuestion({ q, value, onChange, error, index }) {
+  return (
+    <div style={{
+      background: index % 2 === 0 ? WHITE : "#f9fafb",
+      borderRadius: 10, padding: "14px 16px", marginBottom: 10,
+      border: `1px solid ${error ? "#fca5a5" : "#e5e7eb"}`
+    }}>
+      <p style={{ fontSize: 13.5, color: "#111827", marginBottom: 12, lineHeight: 1.55, fontWeight: 500 }}>
+        <span style={{ color: BLUE, fontWeight: 700, marginRight: 6 }}>{index + 1}.</span>
+        {q.text}<span style={{ color: "#ef4444", marginLeft: 3 }}>*</span>
+      </p>
+      <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+        {[1, 2, 3, 4, 5].map(n => (
+          <button key={n} onClick={() => onChange(q.id, n)} style={{
+            flex: "1 1 60px", minWidth: 52, padding: "8px 4px",
+            border: `2px solid ${value === n ? BLUE : "#d1d5db"}`,
+            borderRadius: 8, cursor: "pointer",
+            background: value === n ? BLUE : WHITE,
+            color: value === n ? WHITE : "#374151",
+            fontSize: 12, fontWeight: value === n ? 700 : 400,
+            transition: "all 0.15s", textAlign: "center", lineHeight: 1.3
+          }}>
+            <div style={{ fontWeight: 700, fontSize: 15 }}>{n}</div>
+            <div style={{ fontSize: 10, opacity: 0.85, marginTop: 2 }}>{LIKERT_LABELS[n - 1]}</div>
+          </button>
+        ))}
+      </div>
+      {error && <p style={{ color: "#ef4444", fontSize: 11, marginTop: 6 }}>Please select a rating.</p>}
+    </div>
+  );
+}
+
+function TextareaQuestion({ q, value, onChange, index }) {
+  return (
+    <div style={{ marginBottom: 24 }}>
+      <p style={{ fontWeight: 600, fontSize: 14.5, color: "#111827", marginBottom: 10, lineHeight: 1.5 }}>
+        <span style={{ color: BLUE, marginRight: 6, fontWeight: 700 }}>E{index + 1}.</span>{q.text}
+      </p>
+      <textarea value={value || ""} onChange={e => onChange(q.id, e.target.value)} rows={4}
+        placeholder="Please share your thoughts here…"
+        style={{
+          width: "100%", padding: "10px 12px", borderRadius: 8, fontSize: 14,
+          border: "1.5px solid #d1d5db", fontFamily: "inherit", resize: "vertical",
+          lineHeight: 1.6, color: "#111827", background: WHITE, boxSizing: "border-box"
+        }} />
+    </div>
+  );
+}
+
+function App() {
+  const [step, setStep] = React.useState(0);
+  const [answers, setAnswers] = React.useState({});
+  const [errors, setErrors] = React.useState({});
+  const [submitting, setSubmitting] = React.useState(false);
+  const [submitError, setSubmitError] = React.useState(null);
+
+  const totalSteps = SECTIONS.length;
+  const section = SECTIONS[step - 1];
+
+  function handleAnswer(id, val) {
+    setAnswers(prev => ({ ...prev, [id]: val }));
+    setErrors(prev => { const n = { ...prev }; delete n[id]; return n; });
+  }
+
+  function getAllQuestionsInSection(sec) {
+    return sec.groups.flatMap(g => g.questions);
+  }
+
+  function validate() {
+    if (!section) return true;
+    const qs = getAllQuestionsInSection(section);
+    const newErrors = {};
+    qs.forEach(q => { if (q.type !== "textarea" && !answers[q.id]) newErrors[q.id] = true; });
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) {
+      setTimeout(() => {
+        const el = document.querySelector("[data-error='true']");
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 50);
+      return false;
+    }
+    return true;
+  }
+
+  async function handleSubmit() {
+    if (!validate()) return;
+    setSubmitting(true);
+    setSubmitError(null);
+    const payload = flattenAnswers(answers);
+    try {
+      await fetch(SHEETS_URL, {
+        method: "POST", mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      setStep(totalSteps + 1);
+    } catch (err) {
+      setSubmitError("Submission failed — please check your connection and try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  function next() {
+    if (!validate()) return;
+    if (step < totalSteps) {
+      setStep(s => s + 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      handleSubmit();
+    }
+  }
+
+  function prev() {
+    setStep(s => s - 1);
+    setErrors({});
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  const accent = section ? (SECTION_COLORS[section.id] || NAVY) : NAVY;
+
+  if (step === 0) return (
+    <div style={{ minHeight: "100vh", background: "#f1f5f9", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+      <div style={{ maxWidth: 640, width: "100%", background: WHITE, borderRadius: 16, boxShadow: "0 4px 32px rgba(0,0,0,0.10)", overflow: "hidden" }}>
+        <div style={{ background: `linear-gradient(135deg, ${NAVY} 0%, #2E74B5 100%)`, padding: "48px 40px 40px", textAlign: "center" }}>
+          <div style={{ fontSize: 11, letterSpacing: 3, color: "#93c5fd", fontWeight: 600, marginBottom: 16, textTransform: "uppercase" }}>KCA University &middot; School of Business</div>
+          <h1 style={{ color: WHITE, fontSize: 26, fontWeight: 800, lineHeight: 1.25, marginBottom: 12 }}>Research Questionnaire</h1>
+          <p style={{ color: "#bfdbfe", fontSize: 14, lineHeight: 1.6 }}>
+            Business Intelligence Capability, Strategic Decision-Making,<br />and Organizational Performance in Kenya's Manufacturing Sector
+          </p>
+          <div style={{ marginTop: 20, fontSize: 12, color: "#93c5fd" }}>Juliet Wahu Muiruri &middot; Reg. No. 25/03700 &middot; MBA Research Study, July 2026</div>
+        </div>
+        <div style={{ padding: "32px 40px" }}>
+          <div style={{ background: "#eff6ff", borderLeft: `4px solid ${BLUE}`, borderRadius: "0 8px 8px 0", padding: "16px 18px", marginBottom: 28 }}>
+            <p style={{ fontSize: 13.5, color: "#1e40af", lineHeight: 1.65, margin: 0 }}>
+              <strong>Dear Respondent,</strong><br /><br />
+              You are invited to participate in an academic research study examining the effect of Business Intelligence Capability on Organizational Performance through Strategic Decision-Making among manufacturing firms in Kenya.<br /><br />
+              Your responses are <strong>entirely voluntary and confidential</strong>, used solely for academic purposes. The questionnaire takes approximately <strong>20&ndash;25 minutes</strong> to complete.
+            </p>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 32 }}>
+            {[{ n: "5", label: "Sections" }, { n: "60", label: "Likert Items" }, { n: "5", label: "Open Questions" }].map(({ n, label }) => (
+              <div key={label} style={{ textAlign: "center", padding: "16px 8px", background: "#f8fafc", borderRadius: 10, border: "1px solid #e2e8f0" }}>
+                <div style={{ fontSize: 28, fontWeight: 800, color: NAVY }}>{n}</div>
+                <div style={{ fontSize: 12, color: "#64748b", marginTop: 2 }}>{label}</div>
+              </div>
+            ))}
+          </div>
+          <button onClick={() => setStep(1)} style={{
+            width: "100%", padding: "15px 0", borderRadius: 10, border: "none", cursor: "pointer",
+            background: `linear-gradient(135deg, ${NAVY}, ${BLUE})`,
+            color: WHITE, fontSize: 16, fontWeight: 700, letterSpacing: 0.5
+          }}>Begin Questionnaire →</button>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (step > totalSteps) return (
+    <div style={{ minHeight: "100vh", background: "#f1f5f9", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+      <div style={{ maxWidth: 560, width: "100%", background: WHITE, borderRadius: 16, boxShadow: "0 4px 32px rgba(0,0,0,0.10)", overflow: "hidden", textAlign: "center" }}>
+        <div style={{ background: "linear-gradient(135deg, #1b4332, #276749)", padding: "48px 40px 36px" }}>
+          <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", fontSize: 30, color: WHITE }}>✓</div>
+          <h2 style={{ color: WHITE, fontSize: 24, fontWeight: 800, margin: 0 }}>Submission Complete</h2>
+        </div>
+        <div style={{ padding: "36px 40px" }}>
+          <p style={{ fontSize: 15, color: "#374151", lineHeight: 1.7, marginBottom: 24 }}>
+            Thank you sincerely for your participation. Your responses have been saved and will contribute meaningfully to this study on Business Intelligence Capability and Organizational Performance in Kenya's manufacturing sector.
+          </p>
+          <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 10, padding: "14px 18px", fontSize: 13, color: "#166534" }}>
+            All responses are treated with the strictest confidentiality and used solely for academic research purposes.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const allQs = getAllQuestionsInSection(section);
+  const required = allQs.filter(q => q.type !== "textarea").length;
+  const answeredRequired = allQs.filter(q => q.type !== "textarea" && answers[q.id]).length;
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#f1f5f9", paddingBottom: 60 }}>
+      <div style={{ background: accent, padding: "14px 24px", position: "sticky", top: 0, zIndex: 50, boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}>
+        <div style={{ maxWidth: 760, margin: "0 auto" }}>
+          <ProgressBar current={step} total={totalSteps} />
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4 }}>
+            <span style={{ color: "#bfdbfe", fontSize: 12 }}>{answeredRequired} / {required} required answered</span>
+            <span style={{ color: WHITE, fontSize: 12, fontWeight: 600 }}>Section {section.id}: {section.title}</span>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ maxWidth: 760, margin: "0 auto", padding: "28px 16px" }}>
+        <div style={{ marginBottom: 28 }}>
+          <div style={{ display: "inline-block", background: accent, color: WHITE, fontSize: 11, fontWeight: 700, letterSpacing: 2, padding: "4px 12px", borderRadius: 999, marginBottom: 10, textTransform: "uppercase" }}>
+            Section {section.id}
+          </div>
+          <h2 style={{ fontSize: 22, fontWeight: 800, color: "#111827", margin: "0 0 4px" }}>{section.title}</h2>
+          <p style={{ fontSize: 13, color: "#6b7280", margin: "0 0 14px" }}>{section.subtitle}</p>
+          <div style={{ background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 8, padding: "12px 16px", fontSize: 13, color: "#1e40af", lineHeight: 1.6 }}>
+            {section.instruction}
+          </div>
+        </div>
+
+        {section.groups.map((group, gi) => (
+          <div key={gi} style={{ marginBottom: 32 }}>
+            {group.label && (
+              <div style={{ borderLeft: `4px solid ${accent}`, paddingLeft: 12, marginBottom: 16 }}>
+                <h3 style={{ fontSize: 15, fontWeight: 700, color: accent, margin: 0 }}>{group.label}</h3>
+              </div>
+            )}
+            <div style={{ background: WHITE, borderRadius: 12, border: "1px solid #e5e7eb", padding: "20px 20px 8px", boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}>
+              {group.questions.map((q, qi) => {
+                const hasError = errors[q.id];
+                return (
+                  <div key={q.id} data-error={hasError ? "true" : "false"}>
+                    {q.type === "radio" && <RadioQuestion q={q} value={answers[q.id]} onChange={handleAnswer} error={hasError} />}
+                    {q.type === "likert" && <LikertQuestion q={q} value={answers[q.id]} onChange={handleAnswer} error={hasError} index={qi} />}
+                    {q.type === "textarea" && <TextareaQuestion q={q} value={answers[q.id]} onChange={handleAnswer} index={qi} />}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+
+        {Object.keys(errors).length > 0 && (
+          <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, padding: "14px 18px", marginBottom: 20 }}>
+            <p style={{ color: "#991b1b", fontSize: 13, fontWeight: 600, margin: 0 }}>
+              ⚠ Please answer all required questions before continuing. {Object.keys(errors).length} item{Object.keys(errors).length > 1 ? "s" : ""} still need{Object.keys(errors).length === 1 ? "s" : ""} a response.
+            </p>
+          </div>
+        )}
+
+        {submitError && (
+          <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, padding: "14px 18px", marginBottom: 20 }}>
+            <p style={{ color: "#991b1b", fontSize: 13, fontWeight: 600, margin: 0 }}>⚠ {submitError}</p>
+          </div>
+        )}
+
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 12, marginTop: 8 }}>
+          {step > 1 && (
+            <button onClick={prev} disabled={submitting} style={{
+              padding: "13px 28px", borderRadius: 10, border: `2px solid ${accent}`,
+              background: WHITE, color: accent, fontSize: 14, fontWeight: 700, cursor: "pointer", opacity: submitting ? 0.5 : 1
+            }}>← Back</button>
+          )}
+          <button onClick={next} disabled={submitting} style={{
+            flex: 1, padding: "13px 28px", borderRadius: 10, border: "none",
+            background: submitting ? "#9ca3af" : `linear-gradient(135deg, ${accent}, ${BLUE})`,
+            color: WHITE, fontSize: 14, fontWeight: 700, cursor: submitting ? "not-allowed" : "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 8
+          }}>
+            {submitting ? "Saving…" : step < totalSteps ? `Next: Section ${SECTIONS[step].id} →` : "Submit Questionnaire ✓"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
